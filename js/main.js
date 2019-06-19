@@ -18,20 +18,20 @@ var pictureTemplate = document.querySelector('#picture').content.querySelector('
 var fragment = document.createDocumentFragment();
 var picturesList = document.querySelector('.pictures');
 
-var randomValue = function (max, min) {
+var randomValue = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
 var randomArrayIndex = function (array) {
-  return array[randomValue(array.length, 0)];
+  return array[randomValue(0, array.length)];
 };
 
-var createPhotos = function () {
+var createPost = function () {
   var photos = [];
   for (var i = 0; i < SUM_PHOTOS; i++) {
     photos[i] = {
       url: 'photos/' + (i + 1) + '.jpg',
-      likes: randomValue(LIKES_MAX, LIKES_MIN),
+      likes: randomValue(LIKES_MIN, LIKES_MAX),
       comments: creatComments()
     };
   }
@@ -40,27 +40,36 @@ var createPhotos = function () {
 
 var creatComments = function () {
   var comments = [];
-  for (var i = 0; i < randomValue(4, 1); i++) {
+  for (var i = 0; i < randomValue(1, 4); i++) {
     comments[i] = {
-      avatar: 'img/avatar-' + randomValue(7, 1) + '.svg',
-      message: randomArrayIndex(COMMENTS),
+      avatar: 'img/avatar-' + randomValue(1, 7) + '.svg',
+      message: messageLength(),
       name: randomArrayIndex(NAMES)
     };
   }
   return comments;
 };
 
-var renderPhoto = function (arrayIndex) {
+var messageLength = function () {
+  if (Math.random() < 0.5) {
+    return randomArrayIndex(COMMENTS);
+  } else {
+    return randomArrayIndex(COMMENTS) + ' ' + randomArrayIndex(COMMENTS);
+  }
+};
+
+var renderPhoto = function (post) {
   var clonePicture = pictureTemplate.cloneNode(true);
-  clonePicture.querySelector('.picture__img').src = arrayIndex.url;
-  clonePicture.querySelector('.picture__likes').textContent = arrayIndex.likes;
-  clonePicture.querySelector('.picture__comments').textContent = arrayIndex.comments.length;
+  clonePicture.querySelector('.picture__img').src = post.url;
+  clonePicture.querySelector('.picture__likes').textContent = post.likes;
+  clonePicture.querySelector('.picture__comments').textContent = post.comments.length;
   fragment.appendChild(clonePicture);
 };
 
 var renderPhotos = function () {
   for (var i = 0; i < SUM_PHOTOS; i++) {
-    renderPhoto(createPhotos()[i]);
+    var post = createPost()[i];
+    renderPhoto(post);
   }
   picturesList.appendChild(fragment);
 };

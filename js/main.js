@@ -27,20 +27,21 @@ var randomArrayIndex = function (array) {
 };
 
 var createPost = function () {
-  var photos = [];
+  var posts = [];
   for (var i = 0; i < SUM_PHOTOS; i++) {
-    photos[i] = {
+    posts[i] = {
       url: 'photos/' + (i + 1) + '.jpg',
       likes: randomValue(LIKES_MIN, LIKES_MAX),
       comments: creatComments()
     };
   }
-  return photos;
+  return posts;
 };
 
 var creatComments = function () {
   var comments = [];
-  for (var i = 0; i < randomValue(1, 4); i++) {
+  var commentsCount = randomValue(1, 4);
+  for (var i = 0; i < commentsCount; i++) {
     comments[i] = {
       avatar: 'img/avatar-' + randomValue(1, 7) + '.svg',
       message: messageLength(),
@@ -67,8 +68,9 @@ var renderPhoto = function (post) {
 };
 
 var renderPhotos = function () {
+  var posts = createPost();
   for (var i = 0; i < SUM_PHOTOS; i++) {
-    var post = createPost()[i];
+    var post = posts[i];
     renderPhoto(post);
   }
   picturesList.appendChild(fragment);

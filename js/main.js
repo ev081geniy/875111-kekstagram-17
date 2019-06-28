@@ -15,6 +15,7 @@ var scaleControlBigger = imgUpload.querySelector('.scale__control--bigger');
 var effectsList = imgUpload.querySelector('.effects__list');
 var scaleControlValue = imgUpload.querySelector('.scale__control--value');
 var imgUploadPreview = imgUpload.querySelector('.img-upload__preview img');
+var effectLevelDepth = imgUpload.querySelector('.effect-level__depth');
 var currentEffect = '';
 
 var LIKES_MIN = 15;
@@ -25,7 +26,7 @@ var SCALE_STEP = 25;
 var SCALE_MIN = 25;
 var SCALE_MAX = 100;
 var DEFAULT_SCALE_VALUE = 100;
-var DEFAULT_PIN_POSITION = '100%';
+var DEFAULT_PIN_POSITION = 100;
 
 var COMMENTS = [
   'Всё отлично!',
@@ -37,7 +38,12 @@ var COMMENTS = [
 ];
 var NAMES = ['Артём', 'Ксения', 'Кирилл', 'Татьяна', 'Егор', 'Варвара'];
 
-var effects = {
+var EFFECTS = {
+  none: {
+    filter: 'none',
+    maxValue: '',
+    unit: ''
+  },
   chrome: {
     filter: 'grayscale',
     maxValue: 1,
@@ -128,9 +134,9 @@ renderPhotos();
 var openPopup = function () {
   imgUploadOverlay.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
-  scalingImage(DEFAULT_SCALE_VALUE);
   imgEffectLevel.classList.add('hidden');
-  effectLevelPin.style.left = DEFAULT_PIN_POSITION;
+  scalingImage(DEFAULT_SCALE_VALUE);
+  changePin(DEFAULT_PIN_POSITION);
 };
 
 var closePopup = function () {
@@ -151,19 +157,12 @@ var scalingImage = function (scaleValue) {
   imgUploadPreview.style.transform = 'scale(' + scaleValue / 100 + ')';
 };
 
-var onScaleBiggerClick = function () {
+var onScaleControlClick = function (controlType) {
   var currenScaleValue = parseInt(scaleControlValue.value, 10);
-  if (currenScaleValue < SCALE_MAX) {
-    currenScaleValue += SCALE_STEP;
-    scaleControlValue.value = currenScaleValue + '%';
-    scalingImage(currenScaleValue);
-  }
-};
+  var k = controlType === 'smaller' ? -1 : 1;
 
-var onScaleSmallerClick = function () {
-  var currenScaleValue = parseInt(scaleControlValue.value, 10);
-  if (currenScaleValue > SCALE_MIN) {
-    currenScaleValue -= SCALE_STEP;
+  if (currenScaleValue > SCALE_MIN || currenScaleValue < SCALE_MAX) {
+    currenScaleValue += SCALE_STEP * k;
     scalingImage(currenScaleValue);
   }
 };
@@ -171,39 +170,43 @@ var onScaleSmallerClick = function () {
 var onEffectClick = function (evt) {
   if (evt.target.name === 'effect') {
     currentEffect = evt.target.value;
-    if (currentEffect !== 'none') {
-      var effect = effects[currentEffect];
-      imgUploadPreview.className = 'effects__preview--' + currentEffect;
-      imgUploadPreview.style.filter = createFilter(effect);
-      effectLevelPin.style.left = DEFAULT_PIN_POSITION;
-      imgEffectLevel.classList.remove('hidden');
-    } else {
-      imgEffectLevel.classList.add('hidden');
-      imgUploadPreview.style.filter = 'none';
-    }
+    imgUploadPreview.className = 'effects__preview--' + currentEffect;
+    imgUploadPreview.style.filter = '';
+    imgEffectLevel.classList.toggle('hidden', currentEffect === 'none');
+    changePin(DEFAULT_PIN_POSITION);
   }
 };
 
 var onPinMouseup = function () {
-  var effect = effects[currentEffect];
+  var effect = EFFECTS[currentEffect];
   imgUploadPreview.style.filter = createFilter(effect);
 };
 
 var createFilter = function (effect) {
   var currentPinPosition = parseInt(effectLevelPin.style.left, 10);
-  effectLevelValue.value = currentPinPosition;
   var effectValue = (effect.maxValue * currentPinPosition) / 100;
   var filter = effect.filter + '(' + effectValue + effect.unit + ')';
+  changePin(currentPinPosition);
   return filter;
+};
+
+var changePin = function (value) {
+  effectLevelPin.style.left = value + '%';
+  effectLevelDepth.style.width = value + '%';
+  effectLevelValue.value = value;
 };
 
 uploadFile.addEventListener('change', openPopup);
 
 uploadCancel.addEventListener('click', closePopup);
 
-scaleControlBigger.addEventListener('click', onScaleBiggerClick);
+scaleControlBigger.addEventListener('click', function () {
+  onScaleControlClick('bigger');
+});
 
-scaleControlSmaller.addEventListener('click', onScaleSmallerClick);
+scaleControlSmaller.addEventListener('click', function () {
+  onScaleControlClick('smaller');
+});
 
 effectsList.addEventListener('click', onEffectClick);
 

@@ -157,12 +157,18 @@ var scalingImage = function (scaleValue) {
   imgUploadPreview.style.transform = 'scale(' + scaleValue / 100 + ')';
 };
 
-var onScaleControlClick = function (controlType) {
+var onScaleBiggerClick = function () {
   var currenScaleValue = parseInt(scaleControlValue.value, 10);
-  var k = controlType === 'smaller' ? -1 : 1;
+  if (currenScaleValue < SCALE_MAX) {
+    currenScaleValue += SCALE_STEP;
+    scalingImage(currenScaleValue);
+  }
+};
 
-  if (currenScaleValue > SCALE_MIN || currenScaleValue < SCALE_MAX) {
-    currenScaleValue += SCALE_STEP * k;
+var onScaleSmallerClick = function () {
+  var currenScaleValue = parseInt(scaleControlValue.value, 10);
+  if (currenScaleValue > SCALE_MIN) {
+    currenScaleValue -= SCALE_STEP;
     scalingImage(currenScaleValue);
   }
 };
@@ -200,13 +206,9 @@ uploadFile.addEventListener('change', openPopup);
 
 uploadCancel.addEventListener('click', closePopup);
 
-scaleControlBigger.addEventListener('click', function () {
-  onScaleControlClick('bigger');
-});
+scaleControlBigger.addEventListener('click', onScaleBiggerClick);
 
-scaleControlSmaller.addEventListener('click', function () {
-  onScaleControlClick('smaller');
-});
+scaleControlSmaller.addEventListener('click', onScaleSmallerClick);
 
 effectsList.addEventListener('click', onEffectClick);
 

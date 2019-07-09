@@ -16,7 +16,9 @@ var effectsList = imgUpload.querySelector('.effects__list');
 var scaleControlValue = imgUpload.querySelector('.scale__control--value');
 var imgUploadPreview = imgUpload.querySelector('.img-upload__preview img');
 var effectLevelDepth = imgUpload.querySelector('.effect-level__depth');
+var textDescription = imgUpload.querySelector('.text__description');
 var currentEffect = '';
+var commentFocus = false;
 
 var LIKES_MIN = 15;
 var LIKES_MAX = 200;
@@ -147,7 +149,7 @@ var closePopup = function () {
 };
 
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.keyCode === ESC_KEYCODE && !commentFocus) {
     closePopup();
   }
 };
@@ -201,6 +203,18 @@ var changePin = function (value) {
   effectLevelDepth.style.width = value + '%';
   effectLevelValue.value = value;
 };
+
+var onCommentFocus = function () {
+  commentFocus = true;
+};
+
+var onCommentBlur = function () {
+  commentFocus = false;
+};
+
+textDescription.addEventListener('focus', onCommentFocus);
+
+textDescription.addEventListener('blur', onCommentBlur);
 
 uploadFile.addEventListener('change', openPopup);
 

@@ -17,6 +17,7 @@ var scaleControlValue = imgUpload.querySelector('.scale__control--value');
 var imgUploadPreview = imgUpload.querySelector('.img-upload__preview img');
 var effectLevelDepth = imgUpload.querySelector('.effect-level__depth');
 var textDescription = imgUpload.querySelector('.text__description');
+var effectLevelLine = imgUpload.querySelector('.effect-level__line');
 var currentEffect = '';
 var commentFocus = false;
 
@@ -28,7 +29,7 @@ var SCALE_STEP = 25;
 var SCALE_MIN = 25;
 var SCALE_MAX = 100;
 var DEFAULT_SCALE_VALUE = 100;
-var DEFAULT_PIN_POSITION = 100;
+var DEFAULT_PIN_VALUE = 100;
 
 var COMMENTS = [
   'Всё отлично!',
@@ -43,31 +44,37 @@ var NAMES = ['Артём', 'Ксения', 'Кирилл', 'Татьяна', 'Е
 var EFFECTS = {
   none: {
     filter: 'none',
+    minValue: '',
     maxValue: '',
     unit: ''
   },
   chrome: {
     filter: 'grayscale',
+    minValue: 0,
     maxValue: 1,
     unit: ''
   },
   sepia: {
     filter: 'sepia',
+    minValue: 0,
     maxValue: 1,
     unit: ''
   },
   marvin: {
     filter: 'invert',
+    minValue: 0,
     maxValue: 100,
     unit: '%'
   },
   phobos: {
     filter: 'blur',
+    minValue: 0,
     maxValue: 3,
     unit: 'px'
   },
   heat: {
     filter: 'brightness',
+    minValue: 1,
     maxValue: 3,
     unit: ''
   }
@@ -138,7 +145,6 @@ var openPopup = function () {
   document.addEventListener('keydown', onPopupEscPress);
   imgEffectLevel.classList.add('hidden');
   scalingImage(DEFAULT_SCALE_VALUE);
-  changePin(DEFAULT_PIN_POSITION);
 };
 
 var closePopup = function () {
@@ -181,21 +187,17 @@ var onEffectClick = function (evt) {
     imgUploadPreview.className = 'effects__preview--' + currentEffect;
     imgUploadPreview.style.filter = '';
     imgEffectLevel.classList.toggle('hidden', currentEffect === 'none');
-    changePin(DEFAULT_PIN_POSITION);
+    changePin(DEFAULT_PIN_VALUE);
+    createFilter();
   }
 };
 
-var onPinMouseup = function () {
+var createFilter = function () {
+  var value = effectLevelValue.value;
   var effect = EFFECTS[currentEffect];
-  imgUploadPreview.style.filter = createFilter(effect);
-};
-
-var createFilter = function (effect) {
-  var currentPinPosition = parseInt(effectLevelPin.style.left, 10);
-  var effectValue = (effect.maxValue * currentPinPosition) / 100;
+  var effectValue = ((effect.maxValue - effect.minValue) * value / 100) + effect.minValue;
   var filter = effect.filter + '(' + effectValue + effect.unit + ')';
-  changePin(currentPinPosition);
-  return filter;
+  imgUploadPreview.style.filter = filter;
 };
 
 var changePin = function (value) {
@@ -212,6 +214,44 @@ var onCommentBlur = function () {
   commentFocus = false;
 };
 
+var onPinMouseDown = function (downEvt) {
+  downEvt.preventDefault();
+
+  var startCoordX = downEvt.clientX;
+  var sliderWidth = effectLevelLine.offsetWidth;
+
+  var onPinMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    var shiftX = startCoordX - moveEvt.clientX;
+    startCoordX = moveEvt.clientX;
+    var newCoordX = effectLevelPin.offsetLeft - shiftX;
+    if (newCoordX < 0) {
+      newCoordX = 0;
+    }
+    if (newCoordX > sliderWidth) {
+      newCoordX = sliderWidth;
+    }
+
+    var pinPosition = Math.round(newCoordX / sliderWidth * 100);
+
+    changePin(pinPosition);
+    createFilter();
+  };
+
+  var onPinMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    createFilter();
+
+    document.removeEventListener('mousemove', onPinMouseMove);
+    document.removeEventListener('mouseup', onPinMouseUp);
+  };
+
+  document.addEventListener('mousemove', onPinMouseMove);
+  document.addEventListener('mouseup', onPinMouseUp);
+};
+
+effectLevelPin.addEventListener('mousedown', onPinMouseDown);
+
 textDescription.addEventListener('focus', onCommentFocus);
 
 textDescription.addEventListener('blur', onCommentBlur);
@@ -225,5 +265,3 @@ scaleControlBigger.addEventListener('click', onScaleBiggerClick);
 scaleControlSmaller.addEventListener('click', onScaleSmallerClick);
 
 effectsList.addEventListener('click', onEffectClick);
-
-effectLevelPin.addEventListener('mouseup', onPinMouseup);

@@ -15,8 +15,7 @@
     fragment.appendChild(clonePicture);
   };
 
-  var renderPhotos = function () {
-    var posts = window.createPost();
+  var renderPhotos = function (posts) {
     for (var i = 0; i < SUM_PHOTOS; i++) {
       var post = posts[i];
       renderPhoto(post);
@@ -24,5 +23,5 @@
     picturesList.appendChild(fragment);
   };
 
-  renderPhotos();
+  window.load(renderPhotos);
 })();

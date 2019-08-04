@@ -148,4 +148,35 @@
   };
 
   effectLevelPin.addEventListener('mousedown', onPinMouseDown);
+
+  var inputHashtags = imgUploadOverlay.querySelector('.text__hashtags');
+
+  var onHashtagsValidation = function () {
+    var hashtags = inputHashtags.value.split(' ');
+    var invalidities = [];
+
+    if (hashtags.length > 5) {
+      invalidities.push('Нельзя указать больше пяти хэш-тегов.');
+    }
+
+    hashtags.forEach(function (item, i) {
+      if (item[0] !== '#' && item !== '') {
+        invalidities.push('Хэш-тег должен начинаеться с символа # (решётка).');
+      } else if (item === '#') {
+        invalidities.push('Хэш-тег не может состоять только из одной решётки.');
+      } else if (item.length > 20) {
+        invalidities.push('Максимальная длина одного хэш-тега 20 символов, включая решётку.');
+      } else if (hashtags.indexOf(item.toLowerCase()) !== i) {
+        invalidities.push('Один и тот же хэш-тег не может быть использован дважды.');
+      }
+    });
+
+    if (invalidities) {
+      inputHashtags.setCustomValidity(invalidities.join(' '));
+    } else {
+      inputHashtags.setCustomValidity('');
+    }
+  };
+
+  inputHashtags.addEventListener('input', onHashtagsValidation);
 })();

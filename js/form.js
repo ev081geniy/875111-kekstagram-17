@@ -39,7 +39,6 @@
       unit: ''
     }
   };
-
   var SCALE_STEP = 25;
   var SCALE_MIN = 25;
   var SCALE_MAX = 100;
@@ -49,6 +48,15 @@
   var scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value');
   var scaleControlSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
   var scaleControlBigger = imgUploadOverlay.querySelector('.scale__control--bigger');
+  var inputHashtags = imgUploadOverlay.querySelector('.text__hashtags');
+  var effectLevelValue = imgUploadOverlay.querySelector('.effect-level__value');
+  var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
+  var imgEffectLevel = imgUploadOverlay.querySelector('.img-upload__effect-level');
+  var effectsList = imgUploadOverlay.querySelector('.effects__list');
+  var currentEffect;
+  var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
+  var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
+  var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
 
   var scalingImage = function (scaleValue) {
     scaleControlValue.value = scaleValue + '%';
@@ -71,15 +79,6 @@
     }
   };
 
-  scaleControlBigger.addEventListener('click', onScaleBiggerClick);
-  scaleControlSmaller.addEventListener('click', onScaleSmallerClick);
-
-  var effectLevelValue = imgUploadOverlay.querySelector('.effect-level__value');
-  var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
-  var imgEffectLevel = imgUploadOverlay.querySelector('.img-upload__effect-level');
-  var effectsList = imgUploadOverlay.querySelector('.effects__list');
-  var currentEffect = '';
-
   var createFilter = function () {
     var value = effectLevelValue.value;
     var effect = EFFECTS[currentEffect];
@@ -98,12 +97,6 @@
       createFilter();
     }
   };
-
-  effectsList.addEventListener('click', onEffectClick);
-
-  var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
-  var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
-  var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
 
   var changePin = function (value) {
     effectLevelPin.style.left = value + '%';
@@ -147,36 +140,16 @@
     document.addEventListener('mouseup', onPinMouseUp);
   };
 
-  effectLevelPin.addEventListener('mousedown', onPinMouseDown);
-
-  var inputHashtags = imgUploadOverlay.querySelector('.text__hashtags');
-
   var onHashtagsValidation = function () {
-    var hashtags = inputHashtags.value.split(' ');
-    var invalidities = [];
-
-    if (hashtags.length > 5) {
-      invalidities.push('Нельзя указать больше пяти хэш-тегов.');
-    }
-
-    hashtags.forEach(function (item, i) {
-      if (item[0] !== '#' && item !== '') {
-        invalidities.push('Хэш-тег должен начинаеться с символа # (решётка).');
-      } else if (item === '#') {
-        invalidities.push('Хэш-тег не может состоять только из одной решётки.');
-      } else if (item.length > 20) {
-        invalidities.push('Максимальная длина одного хэш-тега 20 символов, включая решётку.');
-      } else if (hashtags.indexOf(item.toLowerCase()) !== i) {
-        invalidities.push('Один и тот же хэш-тег не может быть использован дважды.');
-      }
-    });
-
-    if (invalidities) {
-      inputHashtags.setCustomValidity(invalidities.join(' '));
-    } else {
-      inputHashtags.setCustomValidity('');
-    }
+    window.validation();
   };
+
+  scaleControlBigger.addEventListener('click', onScaleBiggerClick);
+  scaleControlSmaller.addEventListener('click', onScaleSmallerClick);
+
+  effectsList.addEventListener('click', onEffectClick);
+
+  effectLevelPin.addEventListener('mousedown', onPinMouseDown);
 
   inputHashtags.addEventListener('input', onHashtagsValidation);
 })();

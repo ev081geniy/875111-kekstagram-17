@@ -47,6 +47,7 @@
 
   var openPopup = function () {
     bigPicture.classList.remove('hidden');
+    document.body.classList.add('modal-open');
 
     bigPictureCancel.addEventListener('click', onPopupCloseClick);
     document.addEventListener('keydown', onPopupEscPress);
@@ -58,6 +59,7 @@
 
   var closePopup = function () {
     bigPicture.classList.add('hidden');
+    document.body.classList.remove('modal-open');
 
     bigPictureCancel.removeEventListener('click', onPopupCloseClick);
     document.removeEventListener('keydown', onPopupEscPress);

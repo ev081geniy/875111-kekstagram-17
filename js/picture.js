@@ -68,7 +68,7 @@
     imgFiltersForm.addEventListener('click', onFiltersButtonClick);
   };
 
-  window.load(onSuccessPhotos);
+  window.backend.load(onSuccessPhotos);
 
   var getDataPicture = function (picture) {
     var srcPicture = picture.getAttribute('src');

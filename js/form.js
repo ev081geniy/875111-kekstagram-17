@@ -44,19 +44,19 @@
   var SCALE_MAX = 100;
   var DEFAULT_PIN_VALUE = 100;
 
-  var imgUploadOverlay = document.querySelector('.img-upload__overlay');
-  var scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value');
-  var scaleControlSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
-  var scaleControlBigger = imgUploadOverlay.querySelector('.scale__control--bigger');
-  var inputHashtags = imgUploadOverlay.querySelector('.text__hashtags');
-  var effectLevelValue = imgUploadOverlay.querySelector('.effect-level__value');
-  var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
-  var imgEffectLevel = imgUploadOverlay.querySelector('.img-upload__effect-level');
-  var effectsList = imgUploadOverlay.querySelector('.effects__list');
+  var imgUpload = document.querySelector('.img-upload__overlay');
+  var scaleControlValue = imgUpload.querySelector('.scale__control--value');
+  var scaleControlSmaller = imgUpload.querySelector('.scale__control--smaller');
+  var scaleControlBigger = imgUpload.querySelector('.scale__control--bigger');
+  var inputHashtags = imgUpload.querySelector('.text__hashtags');
+  var effectLevelValue = imgUpload.querySelector('.effect-level__value');
+  var imgUploadPreview = imgUpload.querySelector('.img-upload__preview img');
+  var imgEffectLevel = imgUpload.querySelector('.img-upload__effect-level');
+  var effectsList = imgUpload.querySelector('.effects__list');
   var currentEffect;
-  var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
-  var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
-  var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
+  var effectLevelDepth = imgUpload.querySelector('.effect-level__depth');
+  var effectLevelLine = imgUpload.querySelector('.effect-level__line');
+  var effectLevelPin = imgUpload.querySelector('.effect-level__pin');
 
   var scalingImage = function (scaleValue) {
     scaleControlValue.value = scaleValue + '%';

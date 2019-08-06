@@ -3,7 +3,6 @@
 (function () {
   var DEFAULT_SCALE_VALUE = 100;
 
-  var commentFocus = false;
   var imgUpload = document.querySelector('.img-upload');
   var uploadFile = imgUpload.querySelector('#upload-file');
   var imgUploadOverlay = imgUpload.querySelector('.img-upload__overlay');
@@ -12,21 +11,27 @@
   var scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value');
   var imgEffectLevel = imgUpload.querySelector('.img-upload__effect-level');
   var textDescription = imgUpload.querySelector('.text__description');
+  var textHashtags = imgUpload.querySelector('.text__hashtags');
   var imgUploadForm = document.querySelector('.img-upload__form');
 
-
   var onPopupEscPress = function (evt) {
-    if (!commentFocus) {
-      window.utils.isEscEvent(evt, closePopup);
-    }
+    window.utils.isEscEvent(evt, closePopup);
   };
 
   var onCommentFocus = function () {
-    commentFocus = true;
+    document.removeEventListener('keydown', onPopupEscPress);
   };
 
   var onCommentBlur = function () {
-    commentFocus = false;
+    document.addEventListener('keydown', onPopupEscPress);
+  };
+
+  var onHashtagsFocus = function () {
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+
+  var onHashtagsBlur = function () {
+    document.addEventListener('keydown', onPopupEscPress);
   };
 
   var resetImgPreview = function () {
@@ -43,7 +48,8 @@
 
     textDescription.addEventListener('focus', onCommentFocus);
     textDescription.addEventListener('blur', onCommentBlur);
-    document.addEventListener('keydown', onPopupEscPress);
+    textHashtags.addEventListener('focus', onHashtagsFocus);
+    textHashtags.addEventListener('blur', onHashtagsBlur);
   };
 
   var onUploadChange = function () {
@@ -55,9 +61,10 @@
     uploadFile.value = '';
     imgUploadForm.reset();
 
-    document.removeEventListener('keydown', onPopupEscPress);
     textDescription.removeEventListener('focus', onCommentFocus);
     textDescription.removeEventListener('blur', onCommentBlur);
+    textHashtags.removeEventListener('focus', onHashtagsFocus);
+    textHashtags.removeEventListener('blur', onHashtagsBlur);
   };
 
   var onCancelClick = function () {

@@ -43,6 +43,8 @@
   var SCALE_MIN = 25;
   var SCALE_MAX = 100;
   var DEFAULT_PIN_VALUE = 100;
+  var PERCENT_COUNT = 100;
+  var SCALE_COUNT = 100;
 
   var imgUpload = document.querySelector('.img-upload__overlay');
   var scaleControlValue = imgUpload.querySelector('.scale__control--value');
@@ -60,29 +62,32 @@
 
   var scalingImage = function (scaleValue) {
     scaleControlValue.value = scaleValue + '%';
-    imgUploadPreview.style.transform = 'scale(' + scaleValue / 100 + ')';
+    imgUploadPreview.style.transform = 'scale(' + scaleValue / SCALE_COUNT + ')';
+  };
+
+  var counterScale = function (flag) {
+    var currenScaleValue = parseInt(scaleControlValue.value, 10);
+
+    if (flag === 'smaller' && currenScaleValue > SCALE_MIN) {
+      currenScaleValue -= SCALE_STEP;
+    } else if (flag === 'bigger' && currenScaleValue < SCALE_MAX) {
+      currenScaleValue += SCALE_STEP;
+    }
+    scalingImage(currenScaleValue);
   };
 
   var onScaleBiggerClick = function () {
-    var currenScaleValue = parseInt(scaleControlValue.value, 10);
-    if (currenScaleValue < SCALE_MAX) {
-      currenScaleValue += SCALE_STEP;
-      scalingImage(currenScaleValue);
-    }
+    counterScale('bigger');
   };
 
   var onScaleSmallerClick = function () {
-    var currenScaleValue = parseInt(scaleControlValue.value, 10);
-    if (currenScaleValue > SCALE_MIN) {
-      currenScaleValue -= SCALE_STEP;
-      scalingImage(currenScaleValue);
-    }
+    counterScale('smaller');
   };
 
   var createFilter = function () {
     var value = effectLevelValue.value;
     var effect = EFFECTS[currentEffect];
-    var effectValue = ((effect.maxValue - effect.minValue) * value / 100) + effect.minValue;
+    var effectValue = ((effect.maxValue - effect.minValue) * value / PERCENT_COUNT) + effect.minValue;
     var filter = effect.filter + '(' + effectValue + effect.unit + ')';
     imgUploadPreview.style.filter = filter;
   };
@@ -122,7 +127,7 @@
         newCoordX = sliderWidth;
       }
 
-      var pinPosition = Math.round(newCoordX / sliderWidth * 100);
+      var pinPosition = Math.round(newCoordX / sliderWidth * PERCENT_COUNT);
 
       changePin(pinPosition);
       createFilter();

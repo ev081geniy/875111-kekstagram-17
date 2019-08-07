@@ -15,7 +15,7 @@
   var imgUploadForm = document.querySelector('.img-upload__form');
 
   var onPopupEscPress = function (evt) {
-    window.utils.isEscEvent(evt, closePopup);
+    window.isEscEvent(evt, closePopup);
   };
 
   var onCommentFocus = function () {
@@ -46,6 +46,7 @@
     imgEffectLevel.classList.add('hidden');
     resetImgPreview();
 
+    document.addEventListener('keydown', onPopupEscPress);
     textDescription.addEventListener('focus', onCommentFocus);
     textDescription.addEventListener('blur', onCommentBlur);
     textHashtags.addEventListener('focus', onHashtagsFocus);
@@ -61,6 +62,7 @@
     uploadFile.value = '';
     imgUploadForm.reset();
 
+    document.addEventListener('keydown', onPopupEscPress);
     textDescription.removeEventListener('focus', onCommentFocus);
     textDescription.removeEventListener('blur', onCommentBlur);
     textHashtags.removeEventListener('focus', onHashtagsFocus);

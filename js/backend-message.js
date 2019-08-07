@@ -38,11 +38,11 @@
   };
 
   var onSuccessEcsPress = function (evt) {
-    window.utils.isEscEvent(evt, hideSuccessMessage);
+    window.isEscEvent(evt, hideSuccessMessage);
   };
 
   var onErrorEscPress = function (evt) {
-    window.utils.isEscEvent(evt, hideErrorMessage);
+    window.isEscEvent(evt, hideErrorMessage);
   };
 
   var onSuccessDocumentClick = function () {

@@ -73,10 +73,10 @@
   var getDataPicture = function (picture) {
     var srcPicture = picture.getAttribute('src');
 
-    var dataPicture = postArray.find(function (item) {
+    var dataPicture = postArray.filter(function (item) {
       return item.url === srcPicture;
     });
-    return dataPicture;
+    return dataPicture[0];
   };
 
   var onPictureClick = function (evt) {

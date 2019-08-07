@@ -9,20 +9,21 @@
     },
 
     filterNew: function (array) {
-      var copyArray = array.slice();
-      var newArray = copyArray.
+      var newArray = array.
+        slice(0, NEW_PHOTOS_COUNT).
         sort(function () {
           return Math.random() - 0.5;
-        }).slice(0, NEW_PHOTOS_COUNT);
+        });
 
       return newArray;
     },
 
     filterDiscussed: function (array) {
-      var copyArray = array.slice();
-      var newArray = copyArray.sort(function (a, b) {
-        return b.comments.length - a.comments.length;
-      });
+      var newArray = array.
+        slice().
+        sort(function (a, b) {
+          return b.comments.length - a.comments.length;
+        });
 
       return newArray;
     }

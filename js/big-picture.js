@@ -47,7 +47,7 @@
   };
 
   var onPopupEscPress = function (evt) {
-    window.utils.isEscEvent(evt, closePopup);
+    window.isEscEvent(evt, closePopup);
   };
 
   var onPopupCloseClick = function () {
